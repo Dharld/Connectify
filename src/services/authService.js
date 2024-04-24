@@ -58,7 +58,7 @@ const signup = async (credentials, profileImg) => {
   }
 
   // Add user to the database
-  const { data, error } = await supabase.from("User").insert(user);
+  const { data, error } = await supabase.from("User").insert(user).select();
 
   if (error) {
     console.error(error);
@@ -68,4 +68,28 @@ const signup = async (credentials, profileImg) => {
   return data;
 };
 
-export default { signup, addImage };
+const login = async (credentials) => {
+  const { email, password } = credentials;
+
+  if (!email || !password) {
+    throw new Error("Email and password are required");
+  }
+
+  const { data, error } = await supabase
+    .from("User")
+    .select("*")
+    .eq("USER_EMAIL", email)
+    .eq("USER_PASSWORD", encrypt(password));
+
+  if (error) {
+    console.error(error);
+    throw error;
+  }
+
+  if (data && data.length > 0) {
+    return data[0];
+  } else {
+    throw new Error("Invalid email or password");
+  }
+};
+export default { signup, login };

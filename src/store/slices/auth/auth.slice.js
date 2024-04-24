@@ -9,14 +9,14 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    dummyAction: () => {
-      console.log("Dummy action");
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-
+      .addCase("auth/signup", (state, action) => {
+        state.user = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
       .addMatcher(
         (action) => action.type.endsWith("/pending"),
         (state) => {
@@ -26,8 +26,7 @@ const authSlice = createSlice({
       )
       .addMatcher(
         // Handle rejected actions for all async thunk actions
-        (action) =>
-          action.type.startsWith("auth") && action.type.endsWith("/rejected"),
+        (action) => action.type.endsWith("/rejected"),
         (state, action) => {
           state.loading = false; // Set loading to false for rejected actions
           state.error = action.error; // Set error message from action payload
@@ -36,6 +35,6 @@ const authSlice = createSlice({
   },
 });
 
-export const { dummyAction } = authSlice.actions;
+export const { signup } = authSlice.actions;
 
 export default authSlice.reducer;

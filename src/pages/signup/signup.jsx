@@ -1,7 +1,9 @@
 import { useState } from "react";
-import authService from "../../services/authService";
 import "./Signup.scss";
 import { useToast } from "../../hooks/toast.hook";
+import { useDispatch } from "react-redux";
+import { signup } from "../../store/slices/auth/auth.actions";
+import { useNavigate } from "react-router-dom";
 
 const INITIAL_STATE = {
   email: "",
@@ -14,6 +16,8 @@ export default function Signup() {
   const [credentials, setCredentials] = useState(INITIAL_STATE);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imgPreview, setImgPreview] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { showError, showSuccess } = useToast();
 
@@ -44,13 +48,16 @@ export default function Signup() {
       showError("Passwords do not match");
       return;
     }
-    e.preventDefault();
-    try {
-      await authService.signup(credentials, selectedFile);
-      showSuccess("Signup successful");
-    } catch (err) {
-      showError(err.message);
-    }
+
+    dispatch(signup({ credentials, selectedFile }))
+      .then(() => {
+        showSuccess("Account created successfully");
+        setCredentials(INITIAL_STATE);
+        setSelectedFile(null);
+        setImgPreview(null);
+        navigate("/login");
+      })
+      .catch((err) => showError(err));
   };
 
   return (
