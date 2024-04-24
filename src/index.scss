@@ -14,3 +14,18 @@ body {
   padding: 0;
   font-family: "Product Sans", sans-serif;
 }
+
+.input {
+  display: flex;
+  @apply flex-col gap-1;
+}
+input {
+  @apply border outline-none border-gray-200 focus:ring focus:ring-violet-300 rounded-sm;
+}
+
+button {
+  @apply bg-violet-500 text-white font-bold py-2 px-4 rounded;
+  &:hover {
+    @apply bg-violet-600;
+  }
+}

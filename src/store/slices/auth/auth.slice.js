@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { signup, login } from "./auth.actions";
+import User from "../../../models/user";
 
 const initialState = {
   user: null,
@@ -12,8 +14,19 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase("auth/signup", (state, action) => {
-        state.user = action.payload;
+      .addCase(signup.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        const loggedUser = new User({
+          id: action.payload.USER_ID,
+          email: action.payload.USER_EMAIL,
+          about: action.payload.USER_ABOUT,
+          profileImg: action.payload.USER_PROFILE_SRC,
+          // birthDate: new Date(action.payload.USER_BIRTH_DATE),
+        });
+        state.user = loggedUser;
         state.loading = false;
         state.error = null;
       })
@@ -34,7 +47,5 @@ const authSlice = createSlice({
       );
   },
 });
-
-export const { signup } = authSlice.actions;
 
 export default authSlice.reducer;

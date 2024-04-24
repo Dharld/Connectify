@@ -6,10 +6,20 @@ export const signup = createAsyncThunk(
   async ({ credentials, selectedFile }) => {
     try {
       const user = await authService.signup(credentials, selectedFile);
-      return user[0];
+      return user;
     } catch (err) {
       console.error(err);
       throw err;
     }
   }
 );
+
+export const login = createAsyncThunk("auth/login", async ({ credentials }) => {
+  try {
+    const user = await authService.login(credentials);
+    return user;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+});

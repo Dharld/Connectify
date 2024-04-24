@@ -1,9 +1,9 @@
-import { RouterProvider } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import "./App.scss";
-import { router } from "./utils/router.jsx";
+import "./index.scss";
 
 function App() {
-  return <RouterProvider router={router} />;
+  return <Outlet />;
 }
 
 export default App;

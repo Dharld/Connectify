@@ -1,20 +1,29 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
-import "./Login.scss";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "../../hooks/toast.hook";
+import { login } from "../../store/slices/auth/auth.actions";
+import { useNavigate } from "react-router-dom";
+import "./Login.scss";
+import "./../../App.scss";
 
 const INITIAL_STATE = {
   email: "",
   password: "",
-  confirmPassword: "",
-  birthDate: "",
 };
 
 export default function Login() {
   const [credentials, setCredentials] = useState(INITIAL_STATE);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const error = useSelector((state) => state.auth.error);
 
   const { showError, showSuccess } = useToast();
+
+  useEffect(() => {
+    if (error) {
+      showError(error.message);
+    }
+  }, [error, showError]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,26 +32,22 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { password, confirmPassword } = credentials;
-    if (password !== confirmPassword) {
-      showError("Passwords do not match");
+    if (!credentials.email || !credentials.password) {
+      showError("Email and password are required");
       return;
     }
-
-    dispatch(signup({ credentials, selectedFile }))
-      .then(() => {
-        showSuccess("Account created successfully");
-        setCredentials(INITIAL_STATE);
-        setSelectedFile(null);
-        setImgPreview(null);
-        navigate("/login");
-      })
-      .catch((err) => showError(err));
+    dispatch(login({ credentials })).then((action) => {
+      if (action.error) {
+        return;
+      }
+      showSuccess("You are successfully logged in!");
+      setCredentials(INITIAL_STATE);
+      navigate("/home");
+    });
   };
   return (
     <form onSubmit={handleSubmit}>
-      <h1>Signup</h1>
-
+      <h1>Login</h1>
       <div className="input">
         <label htmlFor="email">Email</label>
         <input
@@ -53,6 +58,7 @@ export default function Login() {
           onChange={handleChange}
         />
       </div>
+
       <div className="input">
         <label htmlFor="password">Password</label>
         <input
@@ -62,26 +68,8 @@ export default function Login() {
           onChange={handleChange}
         />
       </div>
-      <div className="input">
-        <label htmlFor="confirmPassword">Confirm Password</label>
-        <input
-          type="password"
-          name="confirmPassword"
-          value={credentials.confirmPassword}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="input">
-        <label htmlFor="birthdate">Birthdate</label>
-        <input
-          type="date"
-          name="birthDate"
-          value={credentials.birthDate}
-          onChange={handleChange}
-        />
-      </div>
 
-      <button type="submit">Signup</button>
+      <button type="submit">Login</button>
     </form>
   );
 }

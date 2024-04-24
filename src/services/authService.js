@@ -1,5 +1,5 @@
 import supabase from "../utils/connectSupabase";
-import { encrypt } from "../utils/crypto";
+import { decrypt, encrypt } from "../utils/crypto";
 
 const defaultImage = import.meta.env.VITE_DEFAULT_IMG;
 
@@ -65,7 +65,7 @@ const signup = async (credentials, profileImg) => {
     throw error;
   }
 
-  return data;
+  return data[0];
 };
 
 const login = async (credentials) => {
@@ -77,9 +77,10 @@ const login = async (credentials) => {
 
   const { data, error } = await supabase
     .from("User")
-    .select("*")
-    .eq("USER_EMAIL", email)
-    .eq("USER_PASSWORD", encrypt(password));
+    .select(
+      "USER_ID, USER_EMAIL, USER_PASSWORD, USER_ABOUT, USER_PROFILE_SRC, USER_BIRTH_DATE"
+    )
+    .eq("USER_EMAIL", email);
 
   if (error) {
     console.error(error);
@@ -87,9 +88,23 @@ const login = async (credentials) => {
   }
 
   if (data && data.length > 0) {
+    const userPassword = data[0].USER_PASSWORD;
+    const decyptedPassword = decrypt(userPassword);
+
+    if (password != decyptedPassword) {
+      throw new Error("Passwords don't match.");
+    }
+
+    // Update the last login time
+    await supabase
+      .from("User")
+      .update({ USER_LAST_LOGIN: new Date() })
+      .eq("USER_EMAIL", email);
+
     return data[0];
   } else {
     throw new Error("Invalid email or password");
   }
 };
+
 export default { signup, login };
