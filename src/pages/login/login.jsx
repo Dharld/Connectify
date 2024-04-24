@@ -15,9 +15,16 @@ export default function Login() {
   const [credentials, setCredentials] = useState(INITIAL_STATE);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const user = useSelector((state) => state.auth.user);
   const error = useSelector((state) => state.auth.error);
 
   const { showError, showSuccess } = useToast();
+
+  useEffect(() => {
+    if (user) {
+      navigate("/home");
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     if (error) {
@@ -45,6 +52,7 @@ export default function Login() {
       navigate("/home");
     });
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <h1>Login</h1>

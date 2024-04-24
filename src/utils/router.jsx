@@ -3,6 +3,7 @@ import Signup from "../pages/signup/Signup.jsx";
 import Login from "../pages/login/Login.jsx";
 import Home from "../pages/home/Home.jsx";
 import App from "../App.jsx";
+import AddCommunity from "../pages/home/component/AddCommunity/AddCommunity.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -12,6 +13,12 @@ export const router = createBrowserRouter([
       {
         path: "/home",
         element: <Home />,
+        children: [
+          {
+            path: "add-community",
+            element: <AddCommunity />,
+          },
+        ],
       },
       {
         path: "/signup",

@@ -20,12 +20,23 @@ body {
   @apply flex-col gap-1;
 }
 input {
-  @apply border outline-none border-gray-200 focus:ring focus:ring-violet-300 rounded-sm;
+  @apply border outline-none border-gray-200 focus:ring focus:ring-violet-300 rounded-sm px-2 py-3;
 }
 
 button {
-  @apply bg-violet-500 text-white font-bold py-2 px-4 rounded;
+  @apply bg-violet-600 text-white font-bold py-2 px-4 rounded;
   &:hover {
-    @apply bg-violet-600;
+    @apply bg-violet-400;
   }
+}
+
+.overlay {
+  background-image: linear-gradient(
+    to bottom,
+    transparent,
+    rgba(0, 0, 0, 0.05),
+    rgba(0, 0, 0, 0.055),
+    rgba(0, 0, 0, 0.06),
+    rgba(0, 0, 0, 0.065)
+  );
 }

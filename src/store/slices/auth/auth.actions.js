@@ -15,11 +15,6 @@ export const signup = createAsyncThunk(
 );
 
 export const login = createAsyncThunk("auth/login", async ({ credentials }) => {
-  try {
-    const user = await authService.login(credentials);
-    return user;
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
+  const user = await authService.login(credentials);
+  return user;
 });

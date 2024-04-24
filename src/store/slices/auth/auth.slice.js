@@ -2,8 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import { signup, login } from "./auth.actions";
 import User from "../../../models/user";
 
+const user = JSON.parse(localStorage.getItem("user"));
+
 const initialState = {
-  user: null,
+  user: user ?? null,
   loading: false,
   error: null,
 };
@@ -11,7 +13,12 @@ const initialState = {
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.user = null;
+      localStorage.removeItem("user");
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(signup.fulfilled, (state) => {
@@ -26,6 +33,7 @@ const authSlice = createSlice({
           profileImg: action.payload.USER_PROFILE_SRC,
           // birthDate: new Date(action.payload.USER_BIRTH_DATE),
         });
+        localStorage.setItem("user", JSON.stringify(loggedUser));
         state.user = loggedUser;
         state.loading = false;
         state.error = null;
@@ -47,5 +55,7 @@ const authSlice = createSlice({
       );
   },
 });
+
+export const { logout } = authSlice.actions;
 
 export default authSlice.reducer;
