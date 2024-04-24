@@ -5,16 +5,16 @@ import toast, { Toaster } from "react-hot-toast";
 const ToasterContext = createContext();
 
 export const ToasterProvider = ({ children }) => {
-  const successToast = (message) => {
+  const showSuccess = (message) => {
     toast.success(message);
   };
 
-  const errorToast = (message) => {
+  const showError = (message) => {
     toast.error(message);
   };
 
   return (
-    <ToasterContext.Provider value={{ successToast, errorToast }}>
+    <ToasterContext.Provider value={{ showSuccess, showError }}>
       <Toaster position="top-right" />
       {children}
     </ToasterContext.Provider>
