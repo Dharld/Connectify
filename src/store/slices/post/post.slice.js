@@ -1,16 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
-import {
-  createCommunity,
-  getCommunity,
-} from "../../slices/community/community.actions";
+import { createPost } from "./post.actions";
 
 const initialState = {
-  communities: [],
+  posts: [],
   loading: false,
   error: null,
 };
 
-const communitySlice = createSlice({
+const postSlice = createSlice({
   name: "community",
   initialState,
   reducers: {
@@ -18,11 +15,8 @@ const communitySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getCommunity.fulfilled, (state) => {
-        state.loading = false;
-        state.error = null;
-      })
-      .addCase(createCommunity.fulfilled, (state) => {
+      .addCase(createPost.fulfilled, (state, action) => {
+        state.posts.push(action.payload);
         state.loading = false;
         state.error = null;
       })
@@ -44,4 +38,4 @@ const communitySlice = createSlice({
   },
 });
 
-export default communitySlice.reducer;
+export default postSlice.reducer;

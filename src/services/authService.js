@@ -1,26 +1,34 @@
 import supabase from "../utils/connectSupabase";
 import { decrypt, encrypt } from "../utils/crypto";
+import { addImage as addImageHelper } from "../utils/supabaseImages";
 
 const defaultImage = import.meta.env.VITE_DEFAULT_IMG;
 
 const addImage = async (userEmail, avatarFile) => {
-  const type = avatarFile.type ? avatarFile.type.split("/")[1] : "png";
-  try {
-    const { data, error } = await supabase.storage
-      .from("bucket")
-      .upload(`images/${userEmail}/avatar.${type}`, avatarFile);
-    if (error) {
-      console.error("Error uploading image:", error.message);
-      throw error;
-    }
-    console.log("Image uploaded successfully:", data);
-    return data.fullPath;
-  } catch (e) {
-    console.error(e);
-    throw e;
-  }
+  const type = avatarFile.type.split("/")[1];
+  console.log(type);
+  const path = `images/${userEmail}/avatar.${type}`;
+  return addImageHelper(path, avatarFile);
 };
 
+const getUserById = async (userId) => {
+  try {
+    const { data, error } = await supabase
+      .from("User")
+      .select("*")
+      .eq("USER_ID", userId);
+
+    if (error) {
+      console.error("Can't get the user: " + error);
+      throw error;
+    }
+
+    return data[0];
+  } catch (err) {
+    console.error("Can't get the user: " + err);
+    throw err;
+  }
+};
 const signup = async (credentials, profileImg) => {
   const { email, password, birthDate } = credentials;
 
@@ -61,7 +69,7 @@ const signup = async (credentials, profileImg) => {
   const { data, error } = await supabase.from("User").insert(user).select();
 
   if (error) {
-    console.error(error);
+    console.error("Can't create a user: " + error);
     throw error;
   }
 
@@ -107,4 +115,4 @@ const login = async (credentials) => {
   }
 };
 
-export default { signup, login };
+export default { signup, login, getUserById };

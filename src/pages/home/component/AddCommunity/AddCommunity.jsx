@@ -17,8 +17,15 @@ export default function AddCommunity() {
       showError("Please enter a community name");
       return;
     }
-    dispatch(createCommunity({ name, adminId: user.id })).then((res) => {});
-    showSuccess("Community created successfully !");
+    dispatch(createCommunity({ name, adminId: user.id })).then((action) => {
+      if (action.error) {
+        showError(action.error.message);
+        return;
+      }
+      const newCommunity = action.payload;
+      navigate(`../${newCommunity.COMMUNITY_NAME}`);
+      showSuccess("Community created successfully!");
+    });
   };
 
   const handleChange = function (e) {
@@ -26,7 +33,7 @@ export default function AddCommunity() {
   };
 
   return (
-    <div className="fixed w-full h-full overflow-hidden grid place-items-center">
+    <div className="fixed top-0 left-0 w-full h-full overflow-hidden grid place-items-center">
       <div className="fixed w-full h-full overlay"></div>
       <form
         onSubmit={handleSubmit}

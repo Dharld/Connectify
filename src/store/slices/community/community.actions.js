@@ -8,3 +8,11 @@ export const createCommunity = createAsyncThunk(
     return newCommunity;
   }
 );
+
+export const getCommunity = createAsyncThunk(
+  "community/get",
+  async ({ name }) => {
+    const community = await communityService.getCommunity(name);
+    return community;
+  }
+);
