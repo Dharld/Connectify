@@ -5,12 +5,16 @@ import stringUtils from "../../utils/stringUtils";
 import { likePost, unlikePost } from "../../store/slices/post/post.actions";
 import { useEffect, useState } from "react";
 import "./Post.scss";
+import { Link, useNavigate } from "react-router-dom";
 
 const imagePrefix = import.meta.env.VITE_IMAGE_PREFIX;
 
 export default function Post({ post }) {
   const [alreadyLiked, setAlreadyLiked] = useState(false);
   const [numberOfLikes, setNumberOfLikes] = useState(-1);
+  const [showAll, setShowAll] = useState(true);
+
+  const navigate = useNavigate();
 
   const { id: currentUserId } = useSelector((state) => state.auth.user);
   const formattedCreatedAt = dateUtils.formatToNow(post.POST_CREATED_AT);
@@ -36,7 +40,17 @@ export default function Post({ post }) {
 
   const dispatch = useDispatch();
 
-  const handleLikeClick = () => {
+  const navigateToPost = () => {
+    navigate(`posts/${id}`);
+  };
+
+  const handleShow = (event) => {
+    console.log(event);
+    setShowAll(!showAll);
+    event.stopPropagation();
+  };
+
+  const handleLikeClick = (event) => {
     if (alreadyLiked) {
       dispatch(unlikePost({ userId: currentUserId, postId: id }));
       setNumberOfLikes(numberOfLikes > 0 ? numberOfLikes - 1 : numberOfLikes);
@@ -44,12 +58,15 @@ export default function Post({ post }) {
       dispatch(likePost({ userId: currentUserId, postId: id }));
       setNumberOfLikes(numberOfLikes + 1);
     }
-
     setAlreadyLiked(!alreadyLiked);
+    event.stopPropagation();
   };
 
   return (
-    <div className="border-b-2 border-b-slate-100 w-full px-4 py-4 rounded-md">
+    <div
+      className="border-b-2 border-b-slate-100 w-full px-4 py-4 rounded-md cursor-pointer hover:bg-violet-50 transition-colors"
+      onClick={navigateToPost}
+    >
       <div className="text-sm text-slate-500">
         {stringUtils.capitalize(formattedCreatedAt)}
       </div>
@@ -57,7 +74,7 @@ export default function Post({ post }) {
         <img
           src={imagePrefix + profileSrc}
           alt=""
-          className="w-8 h-8 rounded-full border-2 border-slate-300"
+          className="w-8 h-8 rounded-full border-2 border-slate-300 object-cover"
         />
 
         <div className="flex-1">
@@ -65,7 +82,20 @@ export default function Post({ post }) {
           <div className="text-2xl text-slate-800 font-bold secondary-font">
             {title}
           </div>
-          <div className="text-slate-600">{content}</div>
+          <div className="text-slate-600">
+            {
+              <span>
+                {showAll ? content : content.slice(0, 200) + "..."}{" "}
+                {content.length > 100 && (
+                  <span className="text-violet-500 cursor-pointer">
+                    <span onClick={handleShow}>
+                      {showAll ? "Show less" : "Show more"}
+                    </span>
+                  </span>
+                )}
+              </span>
+            }
+          </div>
           <div className="flex gap-1">
             <div
               className={`like ${
@@ -100,7 +130,6 @@ export default function Post({ post }) {
               >
                 <path d="m12,0C5.383,0,0,5.383,0,12s5.383,12,12,12h12v-12C24,5.383,18.617,0,12,0Zm-5,13.5c-.828,0-1.5-.672-1.5-1.5s.672-1.5,1.5-1.5,1.5.672,1.5,1.5-.672,1.5-1.5,1.5Zm5,0c-.828,0-1.5-.672-1.5-1.5s.672-1.5,1.5-1.5,1.5.672,1.5,1.5-.672,1.5-1.5,1.5Zm5,0c-.828,0-1.5-.672-1.5-1.5s.672-1.5,1.5-1.5,1.5.672,1.5,1.5-.672,1.5-1.5,1.5Z" />
               </svg>
-
               <span className="text-slate-600 select-none group-hover:text-violet-500 w-[1ch]"></span>
             </div>
           </div>

@@ -37,6 +37,15 @@ export const addAvatarImage = async (communityName, file) => {
   }
 };
 
+async function getAllCommunities() {
+  try {
+    const communities = await supabase.from("Community").select("*");
+    console.log(communities);
+  } catch (err) {
+    console.error("Error getting all comments: " + err.message);
+    throw err;
+  }
+}
 async function getCommunityById(id) {
   try {
     const { data, error } = await supabase
@@ -114,4 +123,9 @@ async function createCommunity(name, adminId) {
   }
 }
 
-export default { getCommunity, createCommunity, getCommunityById };
+export default {
+  getCommunity,
+  createCommunity,
+  getCommunityById,
+  getAllCommunities,
+};

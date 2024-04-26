@@ -7,6 +7,8 @@ import AddCommunity from "../pages/home/component/AddCommunity/AddCommunity.jsx"
 import Community from "../pages/community/Community.jsx";
 import CommunityDetails from "../pages/community/component/CommunityDetails/CommunityDetails.jsx";
 import AddPost from "../pages/community/component/AddPost/AddPost.jsx";
+import PostDetails from "../components/PostDetails/PostDetails.jsx";
+import Feed from "../components/Feed/Feed.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -18,20 +20,30 @@ export const router = createBrowserRouter([
         element: <Home />,
         children: [
           {
-            path: "communities",
-            element: <Community />,
+            path: "",
+            element: <Feed />,
             children: [
               {
-                path: ":name",
-                element: <CommunityDetails />,
-              },
-              {
-                path: ":name/posts/create",
-                element: <AddPost />,
-              },
-              {
-                path: "create",
-                element: <AddCommunity />,
+                path: "communities",
+                element: <Community />,
+                children: [
+                  {
+                    path: ":name",
+                    element: <CommunityDetails />,
+                  },
+                  {
+                    path: ":name/posts/:postId",
+                    element: <PostDetails />,
+                  },
+                  {
+                    path: ":name/posts/create",
+                    element: <AddPost />,
+                  },
+                  {
+                    path: "create",
+                    element: <AddCommunity />,
+                  },
+                ],
               },
             ],
           },

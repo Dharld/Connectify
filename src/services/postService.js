@@ -1,6 +1,7 @@
 import supabase from "../utils/connectSupabase";
 import communityService from "./communityService";
 import authService from "./authService";
+import { addImage } from "../utils/supabaseImages";
 
 async function checkLike(userId, postId) {
   const { data: data1 } = await supabase
@@ -14,6 +15,7 @@ async function checkLike(userId, postId) {
   }
   return false;
 }
+
 async function likePost(userId, postId) {
   try {
     const exists = await checkLike(userId, postId);
@@ -77,28 +79,74 @@ async function getAllPosts() {
   }
 }
 
+async function getRecentPosts() {
+  try {
+    const { data, error } = await supabase
+      .from("Post")
+      .select(
+        `POST_ID, POST_TITLE, POST_CONTENT, POST_IMAGE_SRC,POST_CREATED_AT, 
+        User (USER_ID, USER_EMAIL,USER_PROFILE_SRC),
+        Upvote (*),
+        Community (*)
+        `
+      )
+      .order("POST_CREATED_AT", { ascending: false })
+      .limit(5);
+    if (error) {
+      console.error("Can't get recent posts: " + error.message);
+      throw error;
+    }
+    return data;
+  } catch (err) {
+    console.error("Can't get recent posts: " + err.message);
+    throw err;
+  }
+}
+
 async function getPostById(postId) {
   try {
     const { data, error } = await supabase
       .from("Post")
       .select(
-        "POST_ID, POST_TITLE, POST_CONTENT, POST_IMAGE_SRC, POST_CREATED_AT, User (USER_ID, USER_EMAIL, USER_PROFILE_SRC)"
+        `POST_ID, POST_TITLE, POST_CONTENT, POST_IMAGE_SRC, POST_CREATED_AT, 
+         User (USER_ID, USER_EMAIL, USER_PROFILE_SRC),
+         Upvote (*)
+        `
       )
       .eq("POST_ID", postId);
 
+    // Fetch comments
+    const { data: comments, error2 } = await supabase
+      .from("Comment")
+      .select(
+        `COMMENT_ID, COMMENT_TEXT, COMMENT_CREATED_AT, User(USER_ID, USER_EMAIL, USER_PROFILE_SRC)`
+      )
+      .eq("POST_ID", postId);
+
+    if (error2) {
+      console.error("Error fetching comment: " + error2.message);
+      console.error(error2);
+      throw error2;
+    }
     if (error) {
-      console.log("Can't get post by id: " + error.message);
+      console.error("Can't get post by id: " + error.message);
       throw error;
     }
 
-    return data[0];
+    const post = data[0];
+    post.Comment = comments ?? [];
+
+    console.log(post);
+
+    return post;
   } catch (err) {
     console.error("Can't get post by id: " + err.message);
     throw err;
   }
 }
+
 async function createPost(postInfos) {
-  const { title, content, userId, communityId } = postInfos;
+  const { title, content, userId, communityId, file } = postInfos;
 
   await communityService.getCommunityById(communityId);
   await authService.getUserById(userId);
@@ -118,12 +166,36 @@ async function createPost(postInfos) {
       console.log("Can't create post: " + error.message);
       throw error;
     }
+    const createdPost = data[0];
 
-    return data[0];
+    if (file) {
+      const postId = createdPost.POST_ID;
+      const type = file.type.split("/")[1];
+      const path = `images/posts/${postId}.${type}`;
+      try {
+        const fullpath = await addImage(path, file);
+        await supabase
+          .from("Post")
+          .update({
+            POST_IMAGE_SRC: fullpath,
+          })
+          .eq("POST_ID", postId);
+      } catch (err) {
+        console.error("Can't add image: " + err.message);
+        throw err;
+      }
+    }
   } catch (err) {
     console.error("Can't create post: " + err.message);
     throw err;
   }
 }
 
-export default { createPost, getAllPosts, getPostById, likePost, unlikePost };
+export default {
+  createPost,
+  getAllPosts,
+  getPostById,
+  likePost,
+  unlikePost,
+  getRecentPosts,
+};

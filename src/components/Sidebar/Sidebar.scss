@@ -1,0 +1,10 @@
+li {
+  a {
+    @apply p-2 rounded  flex items-center gap-1 mb-2 text-violet-700 cursor-pointer;
+
+    &.active,
+    &:hover {
+      @apply bg-violet-50;
+    }
+  }
+}

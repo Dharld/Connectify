@@ -3,6 +3,8 @@ import "./Home.scss";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { logout as logoutAction } from "../../store/slices/auth/auth.slice";
+import Sidebar from "../../components/Sidebar/Sidebar";
+import RecentPost from "../../components/RecentPosts/RecentPost";
 
 const imagePrefix = import.meta.env.VITE_IMAGE_PREFIX;
 
@@ -24,10 +26,14 @@ export default function Home() {
 
   return (
     user && (
-      <section className="home">
-        <header>
+      <section className="home h-[90vh]">
+        <header className="z-50 sticky top-0 bg-white">
           <nav>
-            <ul className="w-full py-2 px-4 bg-slate-900 flex items-center text-white border-b-2 border-b-slate-400">
+            <ul className="w-full py-4 px-4 flex items-center text-white border-b border-b-slate-100">
+              <div className="logo font-extrabold text-slate-800 text-xl italic">
+                Connect<span className="text-violet-800">HUB</span>{" "}
+              </div>
+
               <div className="flex-1"></div>
               <nav>
                 <ul className="w-fullbg-violet-900 flex">
@@ -47,14 +53,8 @@ export default function Home() {
             </ul>
           </nav>
         </header>
-        <main className="flex max-w-7xl mx-auto my-4">
-          <div className="sidebar ">
-            <div className="sidebar-header">
-              <button>
-                <Link to="communities/create">Create Community</Link>
-              </button>
-            </div>
-          </div>
+        <main className="flex h-full">
+          <Sidebar />
           <div className="flex-1">
             <Outlet />
           </div>

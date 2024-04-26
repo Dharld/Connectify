@@ -3,6 +3,7 @@
 @tailwind utilities;
 @import url("https://fonts.cdnfonts.com/css/google-sans");
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
 
 *,
 *::after,
@@ -15,23 +16,52 @@ body {
   padding: 0;
   font-family: "Product Sans", sans-serif;
   @apply text-slate-700;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .secondary-font {
   font-family: "Montserrat";
 }
 
+.logo {
+  font-family: Montserrat;
+}
+
 .input {
   display: flex;
   @apply flex-col gap-1;
+
+  &.row {
+    @apply flex-row;
+  }
 }
+
+.spinner {
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 400ms linear infinite;
+  @apply border-t-violet-500;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 input,
 textarea {
-  @apply border outline-none border-gray-200 focus:ring focus:ring-violet-300 rounded-sm px-2 py-3;
+  @apply border outline-none border-gray-200 focus:ring focus:ring-violet-300 rounded-sm py-3 px-4 text-slate-500;
 }
 
 button {
-  @apply bg-violet-600 text-white font-bold py-2 px-4 rounded;
+  @apply bg-violet-600 text-white font-bold py-2 px-4 rounded-lg;
   &:hover {
     @apply bg-violet-400;
   }
