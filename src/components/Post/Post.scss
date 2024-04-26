@@ -1,0 +1,13 @@
+.like {
+  &.liked {
+    @apply border-violet-600 bg-violet-100;
+
+    svg {
+      @apply fill-violet-500;
+    }
+
+    span {
+      @apply text-violet-500;
+    }
+  }
+}

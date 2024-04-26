@@ -1,20 +1,28 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useToast } from "../../../../hooks/toast.hook";
+import { useDispatch, useSelector } from "react-redux";
+import { createPost } from "../../../../store/slices/post/post.actions";
 
 const INITIAL_STATE = {
   title: "",
   content: "",
 };
 
+const imagePrefix = import.meta.env.VITE_IMAGE_PREFIX;
+
 export default function AddPost() {
   const {
     state: {
-      community: { avatarSrc, name },
+      community: { avatarSrc, name, id: communityId },
     },
   } = useLocation();
-  console.lo;
+  const navigate = useNavigate();
+  const { id: userId } = useSelector((state) => state.auth.user);
   const [credentials, setCredentials] = useState(INITIAL_STATE);
   const { title, content } = credentials;
+  const { showSuccess, showError } = useToast();
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,13 +31,33 @@ export default function AddPost() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(location);
+
+    if (!title || !content) {
+      showError("Please fill in all fields");
+      return;
+    }
+
+    dispatch(createPost({ title, content, userId, communityId })).then(
+      (res) => {
+        if (res.error) {
+          showError(res.error.message);
+          return;
+        }
+        showSuccess("Post created successfully !");
+        setCredentials(INITIAL_STATE);
+        navigate(-1);
+      }
+    );
   };
   return (
     <div className="w-full max-w-[500px] mx-auto h-full ">
-      <div className="border border-violet-900">
-        <img src={avatarSrc} alt="" />
-        <span>{name}</span>
+      <div className="w-fit px-2 py-1 border border-violet-500 flex items-center gap-1  rounded-full group transition-colors cursor-pointer group hover:bg-violet-200">
+        <img
+          src={imagePrefix + avatarSrc}
+          alt=""
+          className="w-8 h-8 rounded-full object-cover border-2 border-violet-500 grouop-hover:"
+        />
+        <span className=" text-violet-800 group-hover:font-bold">{name}</span>
       </div>
       <h3 className="text-4xl font-black text-violet-800">Create A Post</h3>
       <form className="inputs my-4" onSubmit={handleSubmit}>
@@ -48,8 +76,8 @@ export default function AddPost() {
           <label htmlFor="content">Content</label>
           <textarea
             type="content"
-            name="title"
-            id="title"
+            name="content"
+            id="content"
             rows={12}
             placeholder="Content"
             value={credentials.content}

@@ -8,6 +8,8 @@ import {
   addBannerImage,
 } from "../../../../services/communityService";
 import { useToast } from "../../../../hooks/toast.hook";
+import { getPosts } from "../../../../store/slices/post/post.actions";
+import Post from "../../../../components/Post/Post";
 
 const imagePrefix = import.meta.env.VITE_IMAGE_PREFIX;
 
@@ -18,6 +20,7 @@ export default function CommunityDetails() {
   const [avatarFile, setAvatarFile] = useState(null);
 
   const [community, setCommunity] = useState(null);
+  const [posts, setPosts] = useState([]);
 
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -71,6 +74,17 @@ export default function CommunityDetails() {
     });
   }, [name]);
 
+  useEffect(() => {
+    dispatch(getPosts()).then((res) => {
+      if (res.error) {
+        showError(res.error);
+        return;
+      }
+      console.log(res.payload);
+      setPosts(res.payload);
+    });
+  }, []);
+
   const handleContainerClick = () => {
     if (inputFileRef.current) inputFileRef.current.click();
   };
@@ -104,7 +118,7 @@ export default function CommunityDetails() {
   };
 
   return (
-    <div className="px-4">
+    <div className="px-4 max-w-[700px] w-full">
       {community && (
         <>
           <div className="banner bg-slate-200 relative overflow">
@@ -122,9 +136,9 @@ export default function CommunityDetails() {
             </div>
             <div className="banner-content">
               <h1 className="relative banner-title z-10 font-bold">{name}</h1>
-              <div className="avatar bg-slate-100 relative z-10">
+              <div className="avatar  bg-slate-100 relative z-10">
                 {avatarImg && (
-                  <div className="relative rounded-xl overflow-hidden w-full h-full">
+                  <div className="relative rounded-xl overflow-hidden w-full h-full border-4 border-white">
                     <img
                       src={avatarImg}
                       alt=""
@@ -159,7 +173,7 @@ export default function CommunityDetails() {
               </div>
               {isAdmin && (
                 <div
-                  className="position absolute bottom-2 right-2 cursor-pointer w-[48px] h-[48px] grid place-items-center bg-slate-300 rounded-md group hover:bg-violet-400 transition-colors"
+                  className="position absolute z-30 bottom-2 right-2 cursor-pointer w-[48px] h-[48px] grid place-items-center bg-slate-300 rounded-md group hover:bg-violet-400 transition-colors"
                   onClick={handleContainerClick}
                 >
                   <input
@@ -190,7 +204,15 @@ export default function CommunityDetails() {
               </Link>
             </button>
             <div className="posts">
-              <div className="post"></div>
+              {posts.length === 0 ? (
+                <div className="empty-state">No posts Yet 😅</div>
+              ) : (
+                <div className="post-container">
+                  {posts.map((post) => (
+                    <Post post={post} key={post.POST_ID} />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </>
