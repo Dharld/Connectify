@@ -5,7 +5,7 @@ import stringUtils from "../../utils/stringUtils";
 import { likePost, unlikePost } from "../../store/slices/post/post.actions";
 import { useEffect, useState } from "react";
 import "./Post.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const imagePrefix = import.meta.env.VITE_IMAGE_PREFIX;
 
@@ -17,26 +17,22 @@ export default function Post({ post }) {
   const navigate = useNavigate();
 
   const { id: currentUserId } = useSelector((state) => state.auth.user);
-  const formattedCreatedAt = dateUtils.formatToNow(post.POST_CREATED_AT);
+  const formattedCreatedAt = dateUtils.formatToNow(post.post_created_at);
   const {
-    POST_ID: id,
-    POST_TITLE: title,
-    POST_CONTENT: content,
-    POST_IMAGE_SRC: image,
-    User: user,
-    Upvote: likes,
+    post_id: id,
+    post_title: title,
+    post_content: content,
+    post_image_src: image,
+    like_count: likes,
+    user_email: email,
+    user_id: userId,
+    user_profile_src: profileSrc,
   } = post;
-  const {
-    USER_ID: userId,
-    USER_EMAIL: email,
-    USER_PROFILE_SRC: profileSrc,
-  } = user;
 
   useEffect(() => {
-    const liked = likes.some((l) => l.USER_ID === currentUserId);
-    setNumberOfLikes(likes.length);
-    setAlreadyLiked(liked);
-  }, [currentUserId, setAlreadyLiked, likes]);
+    setNumberOfLikes(likes);
+    setAlreadyLiked(userId === currentUserId);
+  }, [currentUserId, setAlreadyLiked, likes, userId]);
 
   const dispatch = useDispatch();
 
@@ -45,7 +41,6 @@ export default function Post({ post }) {
   };
 
   const handleShow = (event) => {
-    console.log(event);
     setShowAll(!showAll);
     event.stopPropagation();
   };
@@ -96,7 +91,7 @@ export default function Post({ post }) {
               </span>
             }
           </div>
-          <div className="flex gap-1">
+          {/* <div className="flex gap-1">
             <div
               className={`like ${
                 alreadyLiked ? "liked" : ""
@@ -132,7 +127,7 @@ export default function Post({ post }) {
               </svg>
               <span className="text-slate-600 select-none group-hover:text-violet-500 w-[1ch]"></span>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

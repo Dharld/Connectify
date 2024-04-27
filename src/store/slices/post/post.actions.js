@@ -1,7 +1,14 @@
-import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import postService from "../../../services/postService";
 import commentService from "../../../services/commentService";
 
+export const deletePost = createAsyncThunk(
+  "post/deletePost",
+  async ({ postId }) => {
+    await postService.deletePost(postId);
+    return postId;
+  }
+);
 export const getPostsSortedByDate = createAsyncThunk(
   "post/getPostsSortedByDate",
   async () => {
@@ -14,6 +21,7 @@ export const getPostsSortedByUpvote = createAsyncThunk(
   "post/getPostsSortedByUpvote",
   async () => {
     const posts = await postService.getPostsSortedByUpvote();
+    console.log(posts);
     return posts;
   }
 );

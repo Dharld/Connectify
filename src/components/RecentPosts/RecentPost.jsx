@@ -20,28 +20,28 @@ export default function RecentPost() {
       {recents.map((recent) => (
         <div
           className="border rounded p-3 my-2 cursor-pointer hover:bg-slate-100 transition-colors"
-          key={recent.POST_ID}
+          key={recent.post_id}
         >
           <Link
-            to={`communities/${recent.Community.COMMUNITY_NAME}/posts/${recent.POST_ID}`}
+            to={`communities/${recent.community_name}/posts/${recent.post_id}`}
           >
             <div className="w-fit rounded-full border border-slate-100 px-4 py-1 text-sm mb-2 hover:bg-violet-500 hover:text-white transition-colors">
-              {recent.Community.COMMUNITY_NAME}
+              {recent.community_name}
             </div>
             <div className="flex gap-1">
               <img
-                src={imagePrefix + recent.User.USER_PROFILE_SRC}
+                src={imagePrefix + recent.user_profile_src}
                 alt=""
                 className="w-6 h-6 object-cover rounded-full flex-shrink-0"
               />
               <div className="content">
                 <h2 className="secondary-font font-bold">
-                  {recent.POST_TITLE}
+                  {recent.post_title}
                 </h2>
                 <p>
-                  {recent.POST_CONTENT.length < 200
-                    ? recent.POST_CONTENT
-                    : recent.POST_CONTENT.slice(0, 200) + "..."}
+                  {recent.post_content.length < 200
+                    ? recent.post_content
+                    : recent.post_content.slice(0, 200) + "..."}
                 </p>
               </div>
             </div>

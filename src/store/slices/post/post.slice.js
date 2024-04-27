@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   commentPost,
   createPost,
+  deletePost,
   getAllPostComments,
   getPostByCommunity,
   getPosts,
@@ -24,7 +25,13 @@ const postSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.posts = state.posts.filter(
+          (post) => post.post_id != action.payload
+        );
+        state.loading = false;
+        state.error = null;
+      })
       .addCase(getPostsSortedByUpvote.fulfilled, (state, action) => {
         state.posts = action.payload;
         state.loading = false;

@@ -76,7 +76,7 @@ export default function FeedHome() {
       ) : posts.length === 0 ? (
         <div>No Posts</div>
       ) : (
-        posts.map((post) => <Post post={post} key={post.POST_ID} />)
+        posts.map((post) => <Post post={post} key={post.post_id} />)
       )}
     </div>
   );

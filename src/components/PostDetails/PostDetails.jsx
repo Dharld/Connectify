@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import dateUtils from "../../utils/dateUtils";
 import {
   commentPost,
+  deletePost,
   likePost,
   unlikePost,
 } from "../../store/slices/post/post.actions";
@@ -27,11 +28,11 @@ export default function PostDetails() {
   const [comments, setComments] = useState([]);
   const { name } = useParams();
 
-  console.log(name);
-
   const dispatch = useDispatch();
 
   const { postId } = useParams();
+
+  const navigate = useNavigate();
 
   const currentUser = useSelector((state) => state.auth.user);
 
@@ -64,9 +65,12 @@ export default function PostDetails() {
       const liked = newPost.likes.some((l) => l.USER_ID === currentUser.id);
 
       const author = {
+        id: newPost.user.USER_ID,
         email: newPost.user.USER_EMAIL,
         avatar: newPost.user.USER_PROFILE_SRC,
       };
+
+      console.log(author.id === currentUser.id);
 
       setPostAuthor(author);
 
@@ -127,6 +131,17 @@ export default function PostDetails() {
     });
   };
 
+  const deletePostHelper = () => {
+    dispatch(deletePost({ postId })).then((res) => {
+      if (res.error) {
+        showError(res.error.message);
+        return;
+      }
+      showSuccess("The post has been deleted successfully !");
+      navigate("/home");
+    });
+  };
+
   function isVideo(url) {
     const videoExtensions = [
       "3g2",
@@ -175,7 +190,13 @@ export default function PostDetails() {
     );
   }
   return (
-    <section className="post-details px-4 w-full max-w-[800px] mx-auto">
+    <section className="post-details px-4 py-4 w-full max-w-[800px] mx-auto">
+      {postAuthor.id === currentUser.id ? (
+        <div className="flex gap-1">
+          <button onClick={deletePostHelper}>Delete</button>
+          <button>Edit</button>
+        </div>
+      ) : null}
       <div className="border-b-2 border-b-slate-100 w-full px-4 py-4 rounded-md cursor-pointer  transition-colors">
         <div className="text-sm text-slate-500">
           {stringUtils.capitalize(formattedCreatedAt)}
