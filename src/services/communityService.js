@@ -39,8 +39,12 @@ export const addAvatarImage = async (communityName, file) => {
 
 async function getAllCommunities() {
   try {
-    const communities = await supabase.from("Community").select("*");
-    console.log(communities);
+    const { data, error } = await supabase.from("Community").select("*");
+    if (error) {
+      console.error("Can't get all posts: " + error.message);
+      throw error;
+    }
+    return data;
   } catch (err) {
     console.error("Error getting all comments: " + err.message);
     throw err;

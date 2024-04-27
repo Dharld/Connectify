@@ -1,9 +1,21 @@
 import { Link } from "react-router-dom";
 import "./Sidebar.scss";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { getPostsByTitle } from "../../store/slices/post/post.actions";
 
 export default function Sidebar() {
+  const [searchText, setSearchText] = useState("");
+  const dispatch = useDispatch();
+
+  const handleChange = function (e) {
+    const value = e.target.value;
+    setSearchText(value);
+    dispatch(getPostsByTitle({ title: value }));
+  };
+
   return (
-    <div className="sidebar flex flex-col p-4 w-full max-w-[350px] border-r border-slate-200">
+    <div className="sidebar flex flex-col p-4 w-full max-w-[350px] border-r border-slate-200 h-full">
       <div className="searchbar flex  bg-slate-100 rounded-md  items-center px-2 focus-within:ring-violet-200 ring ring-transparent mb-4">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -22,6 +34,8 @@ export default function Sidebar() {
           type="text"
           className="flex-1 bg-transparent outline-none border-transparent pl-0 ring-0 focus:ring-0"
           placeholder="Search..."
+          onChange={handleChange}
+          value={searchText}
         />
       </div>
       <div className="sidebar-body  flex-1">

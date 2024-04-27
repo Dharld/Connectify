@@ -9,6 +9,7 @@ import CommunityDetails from "../pages/community/component/CommunityDetails/Comm
 import AddPost from "../pages/community/component/AddPost/AddPost.jsx";
 import PostDetails from "../components/PostDetails/PostDetails.jsx";
 import Feed from "../components/Feed/Feed.jsx";
+import FeedHome from "../components/FeedHome/FeedHome.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -23,6 +24,10 @@ export const router = createBrowserRouter([
             path: "",
             element: <Feed />,
             children: [
+              {
+                path: "",
+                element: <FeedHome />,
+              },
               {
                 path: "communities",
                 element: <Community />,
@@ -44,6 +49,10 @@ export const router = createBrowserRouter([
                     element: <AddCommunity />,
                   },
                 ],
+              },
+              {
+                path: "posts/:postId",
+                element: <PostDetails />,
               },
             ],
           },

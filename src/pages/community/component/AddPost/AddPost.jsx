@@ -117,7 +117,7 @@ export default function AddPost() {
 
           <input
             type="file"
-            accept="image/*"
+            accept="image/*,video/*"
             className="hidden"
             ref={inputFileRef}
             onChange={handleImageChange}
@@ -154,11 +154,19 @@ export default function AddPost() {
             <h3 className="mb-4 text-4xl font-bold text-violet-800 secondary-font">
               Image Preview
             </h3>
-            <img
-              src={imagePreview}
-              alt=""
-              className="w-full max-w-96 max-h-96 object-cover rounded-sm"
-            />
+            {file && file.type.startsWith("image") ? (
+              <img
+                src={imagePreview}
+                alt=""
+                className="w-full max-w-96 max-h-96 object-cover rounded-sm"
+              />
+            ) : (
+              <video
+                src={imagePreview}
+                controls
+                className="w-full max-w-96 max-h-96 object-cover rounded-sm"
+              />
+            )}
           </>
         ) : null}
       </div>

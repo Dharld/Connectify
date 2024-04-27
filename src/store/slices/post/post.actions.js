@@ -2,6 +2,16 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import postService from "../../../services/postService";
 import commentService from "../../../services/commentService";
 
+export const getPostsByTitle = createAsyncThunk(
+  "post/getPostsByTitle",
+  async ({ title }) => {
+    console.log(title);
+    const posts = await postService.getPostsByTitle(title);
+    console.log(posts);
+    return posts;
+  }
+);
+
 export const createPost = createAsyncThunk("post/create", async (postInfos) => {
   const post = await postService.createPost(postInfos);
   return post;
@@ -11,6 +21,14 @@ export const getPosts = createAsyncThunk("post/get", async () => {
   const posts = await postService.getAllPosts();
   return posts;
 });
+
+export const getPostByCommunity = createAsyncThunk(
+  "post/getByName",
+  async ({ name }) => {
+    const posts = await postService.getPostsByCommunityName(name);
+    return posts;
+  }
+);
 
 export const likePost = createAsyncThunk(
   "post/like",

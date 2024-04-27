@@ -79,6 +79,60 @@ async function getAllPosts() {
   }
 }
 
+async function getPostsByTitle(title) {
+  try {
+    const { data, error } = await supabase
+      .from("Post")
+      .select(
+        `POST_ID, POST_TITLE, POST_CONTENT, POST_IMAGE_SRC,POST_CREATED_AT, 
+      User (USER_ID, USER_EMAIL,USER_PROFILE_SRC),
+      Upvote (*)
+      `
+      )
+      .ilike("POST_TITLE", `%${title}%`);
+    if (error) {
+      console.error("Can't get post by title: " + error.message);
+      throw error;
+    }
+    return data;
+  } catch (err) {
+    console.error("Can't get post by title: " + err.message);
+    throw err;
+  }
+}
+
+async function getPostsByCommunityName(name) {
+  console.log(name);
+  try {
+    const { data, error } = await supabase
+      .from("Community")
+      .select("*")
+      .eq("COMMUNITY_NAME", name);
+    if (error) {
+      console.error("Can't get community: " + error.message);
+      throw error;
+    }
+    const communityId = data[0].COMMUNITY_ID;
+    const { data: data2, error: error2 } = await supabase
+      .from("Post")
+      .select(
+        `
+        POST_ID, POST_TITLE, POST_CONTENT, POST_IMAGE_SRC,POST_CREATED_AT, 
+        User (USER_ID, USER_EMAIL,USER_PROFILE_SRC),
+        Upvote (*)
+      `
+      )
+      .eq("COMMUNITY_ID", communityId);
+    if (error2) {
+      console.error("Can't get posts by community name: " + error2.message);
+      throw error2;
+    }
+    return data2;
+  } catch (err) {
+    console.error("Can't get posts by community name: " + err.message);
+    throw err;
+  }
+}
 async function getRecentPosts() {
   try {
     const { data, error } = await supabase
@@ -193,9 +247,11 @@ async function createPost(postInfos) {
 
 export default {
   createPost,
+  getPostsByTitle,
   getAllPosts,
   getPostById,
   likePost,
   unlikePost,
   getRecentPosts,
+  getPostsByCommunityName,
 };

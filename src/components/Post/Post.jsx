@@ -64,7 +64,7 @@ export default function Post({ post }) {
 
   return (
     <div
-      className="border-b-2 border-b-slate-100 w-full px-4 py-4 rounded-md cursor-pointer hover:bg-violet-50 transition-colors"
+      className="border-b-2 border-b-slate-100 w-full px-4 py-4 rounded-md cursor-pointer transition-colors"
       onClick={navigateToPost}
     >
       <div className="text-sm text-slate-500">

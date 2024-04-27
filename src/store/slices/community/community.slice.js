@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import {
   createCommunity,
+  getAllCommunities,
   getCommunity,
 } from "../../slices/community/community.actions";
 
@@ -18,6 +19,11 @@ const communitySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(getAllCommunities.fulfilled, (state, action) => {
+        state.communities = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
       .addCase(getCommunity.fulfilled, (state) => {
         state.loading = false;
         state.error = null;

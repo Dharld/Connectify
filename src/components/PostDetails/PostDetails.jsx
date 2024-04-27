@@ -11,19 +11,23 @@ import {
   likePost,
   unlikePost,
 } from "../../store/slices/post/post.actions";
+import paperPlaneIcon from "./../../assets/icons/paper-plane.png";
 
 const imagePrefix = import.meta.env.VITE_IMAGE_PREFIX;
 
 export default function PostDetails() {
   const [alreadyLiked, setAlreadyLiked] = useState(false);
   const [numberOfLikes, setNumberOfLikes] = useState(-1);
-  const [showAll, setShowAll] = useState(true);
+  const [showAll, setShowAll] = useState(false);
   const [formattedCreatedAt, setFormatedCreatedAt] = useState(null);
   const [postAuthor, setPostAuthor] = useState(null);
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
   const [textComment, setTextComment] = useState("");
   const [comments, setComments] = useState([]);
+  const { name } = useParams();
+
+  console.log(name);
 
   const dispatch = useDispatch();
 
@@ -34,6 +38,7 @@ export default function PostDetails() {
   const { showError, showSuccess } = useToast();
 
   useEffect(() => {
+    setLoading(true);
     postService.getPostById(postId).then((post) => {
       const newPost = {
         id: post.POST_ID,
@@ -45,6 +50,7 @@ export default function PostDetails() {
         comments: post.Comment.map((c) => {
           const author = c.User;
           return {
+            id: c.COMMENT_ID,
             content: c.COMMENT_TEXT,
             createdAt: c.COMMENT_CREATED_AT,
             user: {
@@ -121,6 +127,46 @@ export default function PostDetails() {
     });
   };
 
+  function isVideo(url) {
+    const videoExtensions = [
+      "3g2",
+      "3gp",
+      "aaf",
+      "asf",
+      "avchd",
+      "avi",
+      "drc",
+      "flv",
+      "m2v",
+      "m4p",
+      "m4v",
+      "mkv",
+      "mng",
+      "mov",
+      "mp2",
+      "mp4",
+      "mpe",
+      "mpeg",
+      "mpg",
+      "mpv",
+      "mxf",
+      "nsv",
+      "ogg",
+      "ogv",
+      "qt",
+      "rm",
+      "rmvb",
+      "roq",
+      "svi",
+      "vob",
+      "webm",
+      "wmv",
+      "yuv",
+    ];
+    const urlExtension = url.split(".").pop();
+    return videoExtensions.includes(urlExtension);
+  }
+
   if (loading) {
     return (
       <div className="px-4 w-full h-full grid place-items-center -mt-6">
@@ -130,7 +176,7 @@ export default function PostDetails() {
   }
   return (
     <section className="post-details px-4 w-full max-w-[800px] mx-auto">
-      <div className="border-b-2 border-b-slate-100 w-full px-4 py-4 rounded-md cursor-pointer hover:bg-violet-50 transition-colors">
+      <div className="border-b-2 border-b-slate-100 w-full px-4 py-4 rounded-md cursor-pointer  transition-colors">
         <div className="text-sm text-slate-500">
           {stringUtils.capitalize(formattedCreatedAt)}
         </div>
@@ -145,6 +191,18 @@ export default function PostDetails() {
             <div className="text-slate-600">{postAuthor.email}</div>
             <div className="text-2xl text-slate-800 font-bold secondary-font">
               {post.title}
+            </div>
+
+            <div className="w-full bg-slate-50 my-2">
+              {isVideo(post.image) ? (
+                <video
+                  src={imagePrefix + post.image}
+                  controls
+                  className="w-full"
+                ></video>
+              ) : (
+                <img src={imagePrefix + post.image} alt="" className="w-full" />
+              )}
             </div>
             <div className="text-slate-600">
               {
@@ -212,7 +270,16 @@ export default function PostDetails() {
               setTextComment(e.target.value);
             }}
           />
-          <button onClick={handlePost}>Comment</button>
+          <button onClick={handlePost}>
+            <div className="button-wrapper flex items-center gap-1">
+              <span>Send</span>
+              <img
+                className="w-4 h-4 object-cover"
+                src={paperPlaneIcon}
+                alt=""
+              />
+            </div>
+          </button>
         </div>
       </div>
       {/* Comments */}

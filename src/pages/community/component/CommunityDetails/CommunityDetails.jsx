@@ -8,7 +8,10 @@ import {
   addBannerImage,
 } from "../../../../services/communityService";
 import { useToast } from "../../../../hooks/toast.hook";
-import { getPosts } from "../../../../store/slices/post/post.actions";
+import {
+  getPostByCommunity,
+  getPosts,
+} from "../../../../store/slices/post/post.actions";
 import Post from "../../../../components/Post/Post";
 
 const imagePrefix = import.meta.env.VITE_IMAGE_PREFIX;
@@ -25,7 +28,11 @@ export default function CommunityDetails() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   const dispatch = useDispatch();
+
   const { name } = useParams();
+
+  console.log(name);
+
   const { id: userId } = useSelector((state) => state.auth.user);
 
   const inputFileRef = useRef(null);
@@ -75,12 +82,11 @@ export default function CommunityDetails() {
   }, [name]);
 
   useEffect(() => {
-    dispatch(getPosts()).then((res) => {
+    dispatch(getPostByCommunity({ name })).then((res) => {
       if (res.error) {
         showError(res.error);
         return;
       }
-      console.log(res.payload);
       setPosts(res.payload);
     });
   }, []);
@@ -118,7 +124,7 @@ export default function CommunityDetails() {
   };
 
   return (
-    <div className="px-4 max-w-[700px] w-full">
+    <div className="px-4 w-full">
       {community && (
         <>
           <div className="banner bg-slate-200 relative overflow">
@@ -197,7 +203,7 @@ export default function CommunityDetails() {
               )}
             </div>
           </div>
-          <div className="py-24">
+          <div className="my-20">
             <button>
               <Link to="posts/create" state={{ community }}>
                 Create Post

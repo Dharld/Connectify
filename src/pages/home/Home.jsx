@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from "react-redux";
-import "./Home.scss";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { logout as logoutAction } from "../../store/slices/auth/auth.slice";
 import Sidebar from "../../components/Sidebar/Sidebar";
-import RecentPost from "../../components/RecentPosts/RecentPost";
+
+import "./Home.scss";
 
 const imagePrefix = import.meta.env.VITE_IMAGE_PREFIX;
 
@@ -30,9 +30,11 @@ export default function Home() {
         <header className="z-50 sticky top-0 bg-white">
           <nav>
             <ul className="w-full py-4 px-4 flex items-center text-white border-b border-b-slate-100">
-              <div className="logo font-extrabold text-slate-800 text-xl italic">
-                Connect<span className="text-violet-800">HUB</span>{" "}
-              </div>
+              <Link to="/home">
+                <div className="logo font-extrabold text-slate-800 text-xl italic">
+                  Connect<span className="text-violet-800">HUB</span>{" "}
+                </div>
+              </Link>
 
               <div className="flex-1"></div>
               <nav>
@@ -54,7 +56,9 @@ export default function Home() {
           </nav>
         </header>
         <main className="flex h-full">
-          <Sidebar />
+          <div className="sidebar-container h-full">
+            <Sidebar />
+          </div>
           <div className="flex-1">
             <Outlet />
           </div>

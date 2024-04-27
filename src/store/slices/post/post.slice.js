@@ -3,7 +3,9 @@ import {
   commentPost,
   createPost,
   getAllPostComments,
+  getPostByCommunity,
   getPosts,
+  getPostsByTitle,
   likePost,
   unlikePost,
 } from "./post.actions";
@@ -22,7 +24,17 @@ const postSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getAllPostComments.fulfilled, (state, action) => {
+      .addCase(getPostsByTitle.fulfilled, (state, action) => {
+        state.posts = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(getPostByCommunity.fulfilled, (state, action) => {
+        state.posts = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(getAllPostComments.fulfilled, (state) => {
         state.loading = false;
         state.error = null;
       })

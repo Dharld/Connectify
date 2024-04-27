@@ -16,3 +16,11 @@ export const getCommunity = createAsyncThunk(
     return community;
   }
 );
+
+export const getAllCommunities = createAsyncThunk(
+  "community/getAll",
+  async () => {
+    const communities = await communityService.getAllCommunities();
+    return communities;
+  }
+);
