@@ -44,6 +44,12 @@ body {
   height: 120px;
   animation: spin 400ms linear infinite;
   @apply border-t-violet-500;
+
+  &.spinner-small {
+    width: 40px;
+    height: 40px;
+    border-width: 8px;
+  }
 }
 
 @keyframes spin {

@@ -59,7 +59,7 @@ export default function Sidebar() {
                 <span className="text-md secondary-font font-bold">Home</span>
               </Link>
             </li>
-            <li>
+            {/* <li>
               <Link>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -77,7 +77,7 @@ export default function Sidebar() {
                   My Posts
                 </span>
               </Link>
-            </li>
+            </li> */}
           </ul>
         </nav>
       </div>

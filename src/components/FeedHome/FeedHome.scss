@@ -1,0 +1,27 @@
+.tabs {
+  ul {
+    @apply gap-1;
+    li {
+      position: relative;
+      @apply px-2 cursor-pointer;
+
+      &.active,
+      &:hover {
+        user-select: none;
+        @apply text-violet-500;
+
+        &::after {
+          content: "";
+          position: absolute;
+          bottom: -5px;
+          left: 0;
+          width: 100%;
+          height: 2px;
+          transform-origin: left;
+          transition: transform 0.3s ease-in-out;
+          @apply bg-violet-500;
+        }
+      }
+    }
+  }
+}

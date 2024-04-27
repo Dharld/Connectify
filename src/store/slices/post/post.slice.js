@@ -6,6 +6,8 @@ import {
   getPostByCommunity,
   getPosts,
   getPostsByTitle,
+  getPostsSortedByDate,
+  getPostsSortedByUpvote,
   likePost,
   unlikePost,
 } from "./post.actions";
@@ -19,11 +21,20 @@ const initialState = {
 const postSlice = createSlice({
   name: "community",
   initialState,
-  reducers: {
-    // Define your reducers here
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
+
+      .addCase(getPostsSortedByUpvote.fulfilled, (state, action) => {
+        state.posts = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
+      .addCase(getPostsSortedByDate.fulfilled, (state, action) => {
+        state.posts = action.payload;
+        state.loading = false;
+        state.error = null;
+      })
       .addCase(getPostsByTitle.fulfilled, (state, action) => {
         state.posts = action.payload;
         state.loading = false;

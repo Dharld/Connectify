@@ -1,6 +1,22 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
 import postService from "../../../services/postService";
 import commentService from "../../../services/commentService";
+
+export const getPostsSortedByDate = createAsyncThunk(
+  "post/getPostsSortedByDate",
+  async () => {
+    const posts = await postService.getPostsSortedByDate();
+    return posts;
+  }
+);
+
+export const getPostsSortedByUpvote = createAsyncThunk(
+  "post/getPostsSortedByUpvote",
+  async () => {
+    const posts = await postService.getPostsSortedByUpvote();
+    return posts;
+  }
+);
 
 export const getPostsByTitle = createAsyncThunk(
   "post/getPostsByTitle",

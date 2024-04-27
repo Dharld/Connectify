@@ -198,6 +198,43 @@ async function getPostById(postId) {
     throw err;
   }
 }
+async function getPostsSortedByDate() {
+  try {
+    const { data, error } = await supabase
+      .from("Post")
+      .select(
+        `POST_ID, POST_TITLE, POST_CONTENT, POST_IMAGE_SRC,POST_CREATED_AT, 
+        User (USER_ID, USER_EMAIL,USER_PROFILE_SRC),
+        Upvote (*)
+        `
+      )
+      .order("POST_CREATED_AT", { ascending: false });
+    if (error) {
+      console.error("Can't get posts sorted by date: " + error.message);
+      throw error;
+    }
+    return data;
+  } catch (err) {
+    console.error("Can't get posts sorted by date: " + err.message);
+    throw err;
+  }
+}
+async function getPostsSortedByUpvote() {
+  try {
+    const { data, error } = await supabase.rpc("get_posts_sorted_by_upvote");
+
+    if (error) {
+      console.error(error);
+      console.error("Can't get posts by upvote: " + error.message);
+      throw error;
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Can't get posts by upvote: " + err.message);
+    throw err;
+  }
+}
 
 async function createPost(postInfos) {
   const { title, content, userId, communityId, file } = postInfos;
@@ -254,4 +291,6 @@ export default {
   unlikePost,
   getRecentPosts,
   getPostsByCommunityName,
+  getPostsSortedByDate,
+  getPostsSortedByUpvote,
 };

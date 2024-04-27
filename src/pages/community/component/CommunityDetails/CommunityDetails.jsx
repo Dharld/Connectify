@@ -211,7 +211,7 @@ export default function CommunityDetails() {
             </button>
             <div className="posts">
               {posts.length === 0 ? (
-                <div className="empty-state">No posts Yet 😅</div>
+                <div className="empty-state my-4">No posts Yet 😅</div>
               ) : (
                 <div className="post-container">
                   {posts.map((post) => (
