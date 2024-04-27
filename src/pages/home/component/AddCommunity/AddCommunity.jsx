@@ -11,6 +11,8 @@ export default function AddCommunity() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const loadingPost = useSelector((state) => state.post.loading);
+
   const handleSubmit = function (e) {
     e.preventDefault();
     if (!name) {
@@ -33,15 +35,14 @@ export default function AddCommunity() {
   };
 
   return (
-    <div className="fixed top-0 left-0 w-full h-full overflow-hidden grid place-items-center">
-      <div className="fixed w-full h-full overlay"></div>
+    <div className="w-full h-full overflow-hidden grid place-items-center">
       <form
         onSubmit={handleSubmit}
         className="relative p-4 max-w-[500px] w-full rounded-lg bg-white z-10"
       >
         <h2 className="text-violet-700 text-xl font-bold">Add a Community</h2>
         <div className="input">
-          <label htmlFor="email">Name</label>
+          <label htmlFor="name">Name</label>
           <input
             type="name"
             name="name"
@@ -52,7 +53,11 @@ export default function AddCommunity() {
         </div>
 
         <button type="submit" className="w-full mt-4">
-          Create Community
+          {loadingPost ? (
+            <div className="spinner spinner-extra-small"></div>
+          ) : (
+            <div>Add</div>
+          )}
         </button>
       </form>
     </div>

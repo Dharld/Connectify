@@ -27,6 +27,8 @@ export default function AddPost() {
   const { showSuccess, showError } = useToast();
   const inputFileRef = useRef();
 
+  const loading = useSelector((state) => state.post.loading);
+
   const dispatch = useDispatch();
 
   const handleImageChange = () => {
@@ -144,7 +146,11 @@ export default function AddPost() {
             />
           </div>
           <button type="submit" className="w-full mt-4">
-            Create New Post
+            {loading ? (
+              <div className="spinner spinner-extra-small"></div>
+            ) : (
+              <div>Create Post</div>
+            )}
           </button>
         </form>
       </div>

@@ -12,7 +12,7 @@ const imagePrefix = import.meta.env.VITE_IMAGE_PREFIX;
 export default function Post({ post }) {
   const [alreadyLiked, setAlreadyLiked] = useState(false);
   const [numberOfLikes, setNumberOfLikes] = useState(-1);
-  const [showAll, setShowAll] = useState(true);
+  const [showAll, setShowAll] = useState(false);
 
   const navigate = useNavigate();
 

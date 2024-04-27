@@ -5,6 +5,7 @@ import {
   deletePost,
   getAllPostComments,
   getPostByCommunity,
+  getPostById,
   getPosts,
   getPostsByTitle,
   getPostsSortedByDate,
@@ -25,6 +26,10 @@ const postSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(getPostById.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+      })
       .addCase(deletePost.fulfilled, (state, action) => {
         state.posts = state.posts.filter(
           (post) => post.post_id != action.payload

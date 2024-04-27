@@ -9,6 +9,7 @@ import dateUtils from "../../utils/dateUtils";
 import {
   commentPost,
   deletePost,
+  getPostById,
   likePost,
   unlikePost,
 } from "../../store/slices/post/post.actions";
@@ -34,13 +35,19 @@ export default function PostDetails() {
 
   const navigate = useNavigate();
 
+  const loadingDelete = useSelector((state) => state.post.loading);
   const currentUser = useSelector((state) => state.auth.user);
 
   const { showError, showSuccess } = useToast();
 
   useEffect(() => {
     setLoading(true);
-    postService.getPostById(postId).then((post) => {
+    dispatch(getPostById({ postId })).then((res) => {
+      if (res.error) {
+        showError(res.error.message);
+        return;
+      }
+      const post = res.payload;
       const newPost = {
         id: post.POST_ID,
         title: post.POST_TITLE,
@@ -69,8 +76,6 @@ export default function PostDetails() {
         email: newPost.user.USER_EMAIL,
         avatar: newPost.user.USER_PROFILE_SRC,
       };
-
-      console.log(author.id === currentUser.id);
 
       setPostAuthor(author);
 
@@ -193,7 +198,13 @@ export default function PostDetails() {
     <section className="post-details px-4 py-4 w-full max-w-[800px] mx-auto">
       {postAuthor.id === currentUser.id ? (
         <div className="flex gap-1">
-          <button onClick={deletePostHelper}>Delete</button>
+          <button onClick={deletePostHelper}>
+            {loadingDelete ? (
+              <div className="spinner spinner-extra-small"></div>
+            ) : (
+              <div>Delete</div>
+            )}
+          </button>
           <button>Edit</button>
         </div>
       ) : null}

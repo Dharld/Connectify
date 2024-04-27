@@ -30,7 +30,7 @@ export default function Feed() {
 
   return (
     <div className="flex h-full">
-      <div className="feed-body flex-1 px-4 overflow-scroll">
+      <div className="feed-body flex-1 px-4 overflow-y-scroll">
         <Outlet></Outlet>
       </div>
       <div className="right">

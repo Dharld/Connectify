@@ -32,6 +32,16 @@ body {
   display: flex;
   @apply flex-col gap-1;
 
+  &:focus-within {
+    label {
+      @apply text-violet-500;
+    }
+  }
+
+  input {
+    @apply rounded-md;
+  }
+
   &.row {
     @apply flex-row;
   }
@@ -50,6 +60,12 @@ body {
     height: 40px;
     border-width: 8px;
   }
+
+  &.spinner-extra-small {
+    width: 16px;
+    height: 16px;
+    border-width: 4px;
+  }
 }
 
 @keyframes spin {
@@ -67,7 +83,8 @@ textarea {
 }
 
 button {
-  @apply bg-violet-600 text-white font-bold py-2 px-4 rounded-lg;
+  height: 40px;
+  @apply bg-violet-600 text-white font-bold py-2 px-4 rounded-lg flex justify-center items-center;
   &:hover {
     @apply bg-violet-400;
   }

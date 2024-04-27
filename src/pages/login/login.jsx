@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useToast } from "../../hooks/toast.hook";
 import { login } from "../../store/slices/auth/auth.actions";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Login.scss";
 import "./../../App.scss";
 
@@ -17,6 +17,7 @@ export default function Login() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.auth.user);
   const error = useSelector((state) => state.auth.error);
+  const loading = useSelector((state) => state.auth.loading);
 
   const { showError, showSuccess } = useToast();
 
@@ -54,30 +55,54 @@ export default function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Login</h1>
-      <div className="input">
-        <label htmlFor="email">Email</label>
-        <input
-          type="email"
-          name="email"
-          id="email"
-          value={credentials.email}
-          onChange={handleChange}
-        />
-      </div>
+    <form
+      onSubmit={handleSubmit}
+      className="grid items-center w-full h-[100vh] place-items-center my-auto"
+    >
+      <div className="wrapper w-full max-w-[500px] mx-auto">
+        <h1 className="secondary-font font-bold text-2xl">Login</h1>
+        <div className="input my-4">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            placeholder="Enter your email"
+            value={credentials.email}
+            onChange={handleChange}
+          />
+        </div>
 
-      <div className="input">
-        <label htmlFor="password">Password</label>
-        <input
-          type="password"
-          name="password"
-          value={credentials.password}
-          onChange={handleChange}
-        />
-      </div>
+        <div className="input">
+          <label htmlFor="password">Password</label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter your password"
+            value={credentials.password}
+            onChange={handleChange}
+          />
+        </div>
 
-      <button type="submit">Login</button>
+        <div className="already-account text-right mt-4">
+          <p>
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-underline text-violet-700">
+              Sign up
+            </Link>
+          </p>
+        </div>
+        <button
+          type="submit"
+          className="w-full mt-10 flex justify-center items-center"
+        >
+          {loading ? (
+            <div className="spinner spinner-extra-small"></div>
+          ) : (
+            <div>Login</div>
+          )}
+        </button>
+      </div>
     </form>
   );
 }

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Post from "../../components/Post/Post";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   getPosts,
   getPostsSortedByDate,
@@ -16,7 +16,7 @@ const imagePrefix = import.meta.env.VITE_IMAGE_PREFIX;
 export default function FeedHome() {
   const communities = useSelector((state) => state.community.communities);
   const posts = useSelector((state) => state.post.posts);
-  const { showError, showSuccess } = useToast();
+  const { showError } = useToast();
 
   const dispatch = useDispatch();
 
@@ -42,19 +42,21 @@ export default function FeedHome() {
   return (
     <div className="max-w-[800px] w-full h-full mx-auto relative">
       <div className="communities-wrapper bg-white">
-        <div className="flex gap-2 my-4">
+        <div className="flex gap-3 my-4">
           {communities.map((community) => (
             <Link
               key={community.COMMUNITY_ID}
               to={"communities/" + community.COMMUNITY_NAME}
             >
-              <div>
+              <div className="group">
                 <img
                   src={imagePrefix + community.COMMUNITY_AVATAR_SRC}
                   alt=""
-                  className="w-[150px] h-[150px] rounded-lg ring-3 ring-violet-400 bg-slate-100 object-cover"
+                  className="transition-colors w-[150px] h-[150px] rounded-lg ring ring-slate-100 bg-slate-50  group-hover:ring-violet-300 object-cover"
                 />
-                <div className="text-slate-700">{community.COMMUNITY_NAME}</div>
+                <div className="text-slate-700 group-hover:text-violet-400">
+                  {community.COMMUNITY_NAME}
+                </div>
               </div>
             </Link>
           ))}

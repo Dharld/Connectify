@@ -54,6 +54,13 @@ export const getPostByCommunity = createAsyncThunk(
   }
 );
 
+export const getPostById = createAsyncThunk(
+  "post/getById",
+  async ({ postId }) => {
+    const post = await postService.getPostById(postId);
+    return post;
+  }
+);
 export const likePost = createAsyncThunk(
   "post/like",
   async ({ userId, postId }) => {
