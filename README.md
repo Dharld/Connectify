@@ -41,7 +41,7 @@ The following **additional** features are implemented:
 
 Here's a walkthrough of implemented user stories:
 
-<img src='./../connectify/src/assets/video.gif' />
+<img src='./video.gif' />
 
 <!-- Replace this with whatever GIF tool you used! -->
 
